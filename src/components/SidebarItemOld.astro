@@ -1,0 +1,16 @@
+---
+// props
+interface Props {
+    name: string;
+    path: string;
+    children?: React.ReactNode;
+}
+
+const {name, path} = Astro.props;
+const active = path === Astro.url.pathname;
+---
+<a href={path} class={"flex items-center p-2 text-gray-900 rounded-lg"} >
+    <slot />
+    <slot name = "icon" />
+    <span class="ms-3">{name}</span>
+</a>
