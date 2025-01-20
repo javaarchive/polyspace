@@ -1,0 +1,15 @@
+---
+import ProviderLoginButtonReact from './ProviderLoginButtonReact';
+import { Button } from './ui/button';
+import { signIn, signOut } from "auth-astro/client";
+
+interface Props {
+    name: string;
+    provider: string;
+}
+---
+
+<ProviderLoginButtonReact provider={Astro.props.provider} client:visible>
+    <slot />
+    {Astro.props.name}
+</ProviderLoginButtonReact>

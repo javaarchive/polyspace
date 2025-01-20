@@ -5,17 +5,18 @@ interface Props {
 	title: string;
     description: string;
 	reset?: boolean;
+    fullHeight?: boolean;
 }
 
-const { title } = Astro.props;
+const { title, fullHeight } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class={fullHeight ? "h-full" : ""}>
 	<head>
 		<Head {...Astro.props} />
 	</head>
-	<body>
+	<body class={fullHeight ? "h-full" : ""}>
 		<slot />
 	</body>
 </html>

@@ -1,6 +1,35 @@
 ---
+import CenterBox from "@/components/CenterBox.astro";
+import LoginOptions from "@/components/LoginOptions.astro";
 import Layout from "@/layouts/Layout.astro";
+import {BackgroundImage} from "astro-imagetools/components";
+
+import {getSession} from "auth-astro/server";
+
+const url = new URL(Astro.url);
+const usp = new URLSearchParams(url.search);
+
+if(await getSession(Astro.request)){
+    if(!usp.has("force")){
+        if(usp.has("redirect") && usp.get("redirect").startsWith("/") && !usp.get("redirect").startsWith("//")){
+            return Astro.redirect(usp.get("redirect"));
+        }else{
+            return Astro.redirect("/");
+        }
+    }
+}
 
 ---
 
-<Layout title = "Login" description="Login to dashboard."></Layout>
+<Layout title = "Login" description="Login to dashboard." fullHeight={true}>
+    <BackgroundImage src="/src/assets/background.jpg" attributes={{
+        container: {
+            class: "h-full w-full"
+        }
+    }}>
+        <br />
+        <CenterBox>
+            <LoginOptions />
+        </CenterBox>
+    </BackgroundImage>
+</Layout>

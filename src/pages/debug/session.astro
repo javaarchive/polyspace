@@ -1,0 +1,11 @@
+---
+import {getSession} from "auth-astro/server";
+import Layout from "@/layouts/Layout.astro";
+import DebugThis from "@/components/DebugThis";
+
+const session = await getSession(Astro.request);
+---
+
+<Layout title = "Debug Session" description="Debug session.">
+    <DebugThis object={session} client:visible/>
+</Layout>
