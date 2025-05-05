@@ -56,6 +56,7 @@ export default defineConfig({
         async signIn(details){
             // sign and approve profile
             // approve server
+            console.log("Sign in details",details);
             return true;
             // return false;
         }
