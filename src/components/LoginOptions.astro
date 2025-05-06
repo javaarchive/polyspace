@@ -1,10 +1,11 @@
 ---
-import { Joystick } from "lucide-react";
-import { discordLoginEnabled } from "../backend/server/user";
+import { Joystick, GitFork } from "lucide-react";
+import { discordLoginEnabled, githubLoginEnabled } from "../backend/server/user";
 import ProviderLoginButton from "./ProviderLoginButton.astro";
 ---
 <br />
 <h1 class="text-4xl font-bold text-center">Login with</h1>
 <div class="flex flex-col h-full gap-4 justify-center items-center">
     {discordLoginEnabled && <ProviderLoginButton name="Discord" provider="discord"><Joystick /></ProviderLoginButton>}
+    {githubLoginEnabled && <ProviderLoginButton name="GitHub" provider="github"><GitFork /></ProviderLoginButton>}
 </div>

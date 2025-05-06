@@ -28,6 +28,21 @@ if(import.meta.env.DISCORD_CLIENT_ID && import.meta.env.DISCORD_CLIENT_SECRET){
     }));
 }
 
+// GitHub
+if(import.meta.env.GITHUB_CLIENT_ID && import.meta.env.GITHUB_CLIENT_SECRET){
+    providers.push(GitHub({
+        clientId: import.meta.env.GITHUB_CLIENT_ID,
+        clientSecret: import.meta.env.GITHUB_CLIENT_SECRET,
+        /*profile: async (profile) => {
+            console.log("Profile",profile);
+            return {
+                ...profile,
+                "github_id": profile.id
+            };
+        }*/
+    }));
+}
+
 export default defineConfig({
   providers: providers,
   callbacks: {
@@ -50,6 +65,10 @@ export default defineConfig({
             if(!account) return token;
             if(account.providerAccountId){
                 token["provider_id"] = account.providerAccountId;
+                token["univerisal_id"] = account.provider + ":" + account.providerAccountId;
+            }
+            if(account.jwt){ // include backend jwt
+                token["jwt"] = account.jwt;
             }
             return token;
         },
@@ -57,6 +76,12 @@ export default defineConfig({
             // sign and approve profile
             // approve server
             console.log("Sign in details",details);
+            if(details.account){
+                if(details.account.providerAccountId && details.account.provider){
+                    const univerisal_id = details.account.provider + ":" + details.account.providerAccountId;
+                    // add to details.account
+                }
+            }
             return true;
             // return false;
         }
