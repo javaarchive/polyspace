@@ -3,6 +3,11 @@ import Discord from '@auth/core/providers/discord';
 
 import { defineConfig } from 'auth-astro';
 
+import { fetch } from "cross-fetch"
+
+const BACKEND_URL = import.meta.env.BACKEND_URL;
+const SHARED_SECRET= import.meta.env.SHARED_SECRET;
+
 let providers = [];
 if(import.meta.env.DISCORD_CLIENT_ID && import.meta.env.DISCORD_CLIENT_SECRET){
     providers.push(Discord({
@@ -54,9 +59,9 @@ export default defineConfig({
             if (session.user && token && !session.user.id && token.provider_id) {
                 session.user.id = token.provider_id;
             }
-           if(token.provider_id){
-               
-           }
+            if(token.provider_id){
+                
+            }
             return session;
         },
         jwt(tokenInfo){
@@ -80,6 +85,16 @@ export default defineConfig({
                 if(details.account.providerAccountId && details.account.provider){
                     const univerisal_id = details.account.provider + ":" + details.account.providerAccountId;
                     // add to details.account
+                    const resp = await fetch(`${BACKEND_URL}/api/token`, {
+                        headers: {
+                            "Authorization": `Bearer ${SHARED_SECRET}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            "univerisal_id": univerisal_id
+                        })
+                    });
+                    
                 }
             }
             return true;
