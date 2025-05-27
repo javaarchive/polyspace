@@ -2,7 +2,6 @@
 import fetch from "node-fetch"; // TODO: do I want to use cross-fetch here?
 import crypto from "crypto";
 import { SignJWT } from "jose";
-import type { init } from "astro/virtual-modules/prefetch.js";
 
 const fetchAlias = fetch;
 
@@ -37,7 +36,7 @@ export class GlowberryClient {
 
     async request(method: string, path: string, body: any): Promise<Response> {
         const resp = await this.fetch(method, path, body);
-        if(resp.ok){ 
+        if(resp.ok){
             return resp;
         }else{
             throw new Error("Request failed: " + resp.status + " " + resp.statusText + " " + (await resp.text()));

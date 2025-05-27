@@ -1,7 +1,10 @@
 ---
 import AppSidebarReact from "./AppSidebarReact";
-import SidebarItem from "./SidebarItem.astro";
+// import SidebarItem from "./SidebarItem.astro";
 import { House } from 'lucide-react';
 
+const path = Astro.url.pathname;
+// console.log("AppSidebar path:", path);
+
 ---
-<AppSidebarReact />
+<AppSidebarReact path={path} />

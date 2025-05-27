@@ -8,6 +8,14 @@ import { fetch } from "cross-fetch"
 const BACKEND_URL = import.meta.env.BACKEND_URL;
 const SHARED_SECRET= import.meta.env.SHARED_SECRET;
 
+if(!BACKEND_URL){
+    throw new Error("BACKEND_URL is not set");
+}
+
+if(!SHARED_SECRET){
+    throw new Error("SHARED_SECRET is not set");
+}
+
 let providers = [];
 if(import.meta.env.DISCORD_CLIENT_ID && import.meta.env.DISCORD_CLIENT_SECRET){
     providers.push(Discord({
@@ -75,6 +83,9 @@ export default defineConfig({
             if(account.jwt){ // include backend jwt
                 token["jwt"] = account.jwt;
             }
+            if(tokenInfo.profile){
+                token["profile"] = tokenInfo.profile;
+            }
             return token;
         },
         async signIn(details){
@@ -83,22 +94,37 @@ export default defineConfig({
             console.log("Sign in details",details);
             if(details.account){
                 if(details.account.providerAccountId && details.account.provider){
-                    const univerisal_id = details.account.provider + ":" + details.account.providerAccountId;
+                    const identity = details.account.provider + ":" + details.account.providerAccountId;
+                    // console.log("backend",`${BACKEND_URL}/api/v0/token`);
                     // add to details.account
-                    const resp = await fetch(`${BACKEND_URL}/api/token`, {
+                    const resp = await fetch(`${BACKEND_URL}/api/v0/token`, {
                         headers: {
                             "Authorization": `Bearer ${SHARED_SECRET}`,
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            "univerisal_id": univerisal_id
-                        })
+                            "identity": identity
+                        }),
+                        method: "POST"
                     });
-                    
+
+                    if(resp.ok){
+                        const authRespData = await resp.json();
+                        if(!authRespData || !authRespData.token){
+                            console.error("No token in response", authRespData);
+                            return false;
+                        }
+                        console.log(authRespData);
+                        details.account.jwt = authRespData.token;
+                        return true;
+                    }
+                    console.error("Failed to sign in", resp.status);
+                    console.error(await resp.text());
+                    return false;
                 }
             }
-            return true;
-            // return false;
+            // return true;
+            return false;
         }
     }
 });

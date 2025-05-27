@@ -1,11 +1,12 @@
 ---
 import AppSidebar from "@/components/AppSidebar.astro";
 import AppSidebarReact from "@/components/AppSidebarReact";
-import Sidebar from "@/components/Sidebar.astro";
+import { App } from "astro/app";
+// import Sidebar from "@/components/Sidebar.astro";
 ---
 
 <main>
-    <AppSidebarReact>
+    <AppSidebarReact path={Astro.url.pathname}>
         <slot />
     </AppSidebarReact>
 </main>

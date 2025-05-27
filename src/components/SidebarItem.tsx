@@ -1,5 +1,6 @@
-import { propsToFilename } from "astro/assets/utils";
+import { useContext, useMemo } from "react";
 import { SidebarMenuButton, SidebarMenuItem } from "./ui/sidebar";
+import PagePathContext from "./pagectx";
 
 interface Props {
     name: string;
@@ -8,9 +9,19 @@ interface Props {
 }
 
 export const SidebarItem = ({name, path, children}: Props) => {
+
+    const currentPagePath = useContext(PagePathContext);
+    const isActive = useMemo(() => {
+        if (!currentPagePath) return false;
+        if(path == "/"){
+            return currentPagePath === null || currentPagePath === "/";
+        }
+        return currentPagePath.startsWith(path);
+    }, [currentPagePath, path]);
+
     return (
         <SidebarMenuItem key={path}>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton isActive={isActive} asChild>
                 <a href={path}>
                     {children}
                     <span>{name}</span>
